@@ -1,0 +1,71 @@
+# Модуль D. Forensic
+### Закрепление (Linux): 
+- crontab
+- /etc/profile, /etc/profile.d/ и сервисы с демонами (systemd, systemctl)
+- таймеры (systemctl last-timers команда для просмотра таймеров)
+- ldconfig (/sbin/ldconfig --help)
+- cat ~/.bashrc, cat ~/.bash_profile, cat /etc/profile (проверка на скрытые скрипты)
+- find / -name ".*" -type f (скрытые файлы)
+- ls -la /tmp, ls -la /var/tmp, ls -la /dev/shm (исполняемые файлы во временных папках)
+- lsof -i (потенциально поиск бэкдоров)
+- 
+
+
+### Поиск файлов и следов
+- sleuthkit (https://github.com/sleuthkit)
+	- fls поиск файлов по файловой системе (fls --help)
+		- -r рекурсивный
+		- -d только удаленные файлы
+	- fcat чтение файлов
+		- fcat way_to_folder id_note | xxd
+	- icat содержимое файлов
+		- icat way_to_folder id_note | xxd
+- auditd или какие-то утилиты аудита на машине/в домене
+	- journalctl -ex | grep то что интересно, например shadow
+
+### Действия с компом при смене пароля не зная его
+https://habr.com/ru/articles/54103/
+https://iqdata.center/reset_password_ubuntu/
+
+### Закрепление (Windows)
+- Пользователи: sysdm.cpl
+- Реестр
+- планировщик задач (Get-ItemProperty, Get-ScheduledTask) и менеджер процессов
+- autoruns
+- 
+
+
+### Сетевые подключения и процессы
+- ps -a (ps auxf)
+- tcpdump
+- netstsat
+	- Linux: netstat -tulnp
+	- Windows: netstat -ano (либо netstat -naob)
+- ip a -> nmap 
+- tasklist / Get-Process (Windows CMD / PowerShell), reg query, schtasks
+	-  schtasks /query /fo LIST /v — детальный вывод всех задач, включая скрытые
+	- autorunsc.exe -a * -h -accepteula (sysinternals autoruns everywhere)
+
+
+### Диски и монтирование
+- testdisk (пакет photorec)
+- cipher -c filename (Восстановление или шифрование данных на дисках)
+- https://serverspace.ru/support/help/mounting-a-disk-and-creating-partitions-in-linux/?utm_source=google.com&utm_medium=organic&utm_campaign=google.com&utm_referrer=google.com
+
+### Логирование
+- Windows
+	- eventvwr.msc
+	- ~\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline
+	- C:\Windows\System32\winevt\Logs
+- Linux
+	- /var/log
+	- /etc/audit/rules (либо /etc/auditd)
+	- journalctl
+	- ~/.bash_history
+
+
+### Полезные ссылки
+- https://habr.com/ru/articles/986696/
+- https://habr.com/ru/companies/pt/articles/976586/
+- https://habr.com/ru/articles/755344/
+- https://habr.com/ru/articles/568298/
