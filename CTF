@@ -9,6 +9,13 @@ https://cryptii.com/
 https://www.dcode.fr/
 https://www.dcode.fr/music-sheet-cipher музыкальное
 https://factordb.com/index.php разложение на множители
+Примеры BaseN кодировок для ориентира
+ У нас есть фраза HEY BASE N
+  Base32: JBCVSICCIFJUKICO
+  Base45: 6691CB-G8WNAZ34
+  Base58: 54VtBi8z8gsfRf
+  Base64: SEVZIEJBU0UgTg==
+  Base85: 84?Z(6:"O=+AM
 
 ### STEGANO
 - Картинки
