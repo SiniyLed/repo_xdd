@@ -31,10 +31,10 @@ Sonic Visualiser
 Это инструмент командной строки, который может скрывать данные в различных типах файлов. Он поддерживает различные алгоритмы сжатия и шифрования.
  sudo apt install steghide
 **Stegsolve**
-Это приложение, которое вы можете скачать [здесь](https://github.com/Giotino/stegsolve/releases).  
+Это приложение, которое вы можете скачать https://github.com/Giotino/stegsolve/releases.  
 Вы сможете  просматривать различные плоскости цветности изображений и искать скрытую информацию, используя различные фильтры и алгоритмы.
 **OpenStego**
-Еще одно [приложение](https://www.openstego.com/), где можно прятать и раскрывать данные.
+Еще одно https://www.openstego.com/, где можно прятать и раскрывать данные.
 https://ru.stackoverflow.com/questions/1529122/%D0%9D%D1%83%D0%B6%D0%BD%D0%BE-%D0%B2%D1%8B%D1%82%D0%B0%D1%89%D0%B8%D1%82%D1%8C-%D0%B8%D0%BD%D1%84%D1%83-%D0%B8%D0%B7-png
 
 ### FORENSIC
@@ -56,7 +56,7 @@ https://crackstation.net/
 
 SQLi https://proglib.io/p/vzlamyvaem-sayty-shpargalka-po-sql-inekciyam-2019-12-21
 SQLi https://www.knowledgehut.com/blog/security/sql-injection-and-prevention#symptoms-of-sqli%E2%80%8A
-```
+
 curl -u **логин**:**пароль** -H "Referer: **откуда**" **куда**
 
 **Логин** это логин.
