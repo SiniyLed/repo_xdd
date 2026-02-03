@@ -7,3 +7,7 @@ https://github.com/The-Z-Labs/linux-exploit-suggester?spm=a2ty_o01.29997173.0.0.
 
 ### MITRE ATT&CK (RU)
 https://mitre.ptsecurity.com/ru-RU
+
+
+fswatch
+stat
