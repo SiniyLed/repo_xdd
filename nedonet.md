@@ -33,7 +33,8 @@ openssl req -x509 -nodes -days 365 \
 	-subj "/CN=${HOSTNAME}"
 
 конфиг nginx с ssl
-![[Pasted image 20260126233727.png]]
+<img width="522" height="350" alt="image" src="https://github.com/user-attachments/assets/3548235f-7e2e-4b7f-be13-e7b3b8d1f99b" />
+
 
 curl -D- -k https://127.0.0.1/
 
@@ -46,10 +47,7 @@ update-ca-certificates
 
 
 ### OpenVPN
-![[Pasted image 20260201221520.png]]
-
-
-
+<img width="578" height="253" alt="image" src="https://github.com/user-attachments/assets/6e971124-8872-490b-bc52-1ebfd9c936cc" />
 
 
 
@@ -114,8 +112,8 @@ echo "Создание завершено."
 ```
 
 ### Журналирование (auditd)
-![[Pasted image 20260201223627.png]]
+<img width="881" height="228" alt="image" src="https://github.com/user-attachments/assets/a2c6074c-e619-4b05-a7b9-20947815a993" />
 
-
+### Бэкапы
 https://github.com/rda0/ldif-git-backup?ysclid=ml702ojsg5234308302
 https://pro-ldap.ru/tr/zytrax/ch8/
