@@ -1,5 +1,5 @@
 ### Настройка VPN (Wireguard и OpenVPN)
-Сначала net.ipv4.ip_forward = 1
+Сначала net.ipv4.ip_forward = 1 \n
 На хостах: apt install curl openssl
 На роутере: apt-get install -y iptables iproute2 net-tools nginx wireguard openssl
 
@@ -21,8 +21,6 @@ AllowedIPs = ??
 поднятие сервиса wg (имя wg)
 wg-quick up wg 
 
-
-
 генерация ключа ssl
 openssl genrsa -out /etc/nginx/ssl/nginx.key 2048
 
@@ -43,8 +41,6 @@ cp /etc/nginx/ssl/nginx.crt /usr/local/share/ca-certificates
 update-ca-certificates
 
 и дальше curl можно обращаться уже по хостнейму
-
-
 
 ### OpenVPN
 <img width="578" height="253" alt="image" src="https://github.com/user-attachments/assets/6e971124-8872-490b-bc52-1ebfd9c936cc" />
