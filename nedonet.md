@@ -1,46 +1,48 @@
 ### Настройка VPN (Wireguard и OpenVPN)
 Сначала net.ipv4.ip_forward = 1 \
-На хостах: apt install curl openssl
-На роутере: apt-get install -y iptables iproute2 net-tools nginx wireguard openssl
+На хостах: apt install curl openssl \
+На роутере: apt-get install -y iptables iproute2 net-tools nginx wireguard openssl\
 
-Создание ключа WG: 
-wg genkey | tee /etc/wireguard/privatekey | wg pubkey > /etc/wireguard/publickey
-cat /etc/wireguard/privatekey
+Создание ключа WG: \
+wg genkey | tee /etc/wireguard/privatekey | wg pubkey > /etc/wireguard/publickey \
+cat /etc/wireguard/privatekey \
 
-Конфиг WG:
-[Interface]
-Address = "our ip for tunnel"
-PrivateKey = "this host private key"
-ListenPort = 
+Конфиг WG: \
+[Interface] \
+Address = "our ip for tunnel" \
+PrivateKey = "this host private key" \
+ListenPort = \
 
-[Peer] #тот_с_кем_коннект
-Publickey = ?? #НЕ_НАШ_КЛЮЧ 
-AllowedIPs = ??
+[Peer] #тот_с_кем_коннект \
+Publickey = ?? #НЕ_НАШ_КЛЮЧ \
+AllowedIPs = ?? \
 
 
-поднятие сервиса wg (имя wg)
-wg-quick up wg 
+поднятие сервиса wg (имя wg) \
+wg-quick up wg \
 
-генерация ключа ssl
-openssl genrsa -out /etc/nginx/ssl/nginx.key 2048
+генерация ключа ssl \
+openssl genrsa -out /etc/nginx/ssl/nginx.key 2048 \
 
-генерация самоподписного серта (-nodes без шифрования)
+генерация самоподписного серта (-nodes без шифрования) \
+```
 openssl req -x509 -nodes -days 365 \
 	-key /etc/nginx/ssl/nginx.key \
 	-out etc/nginx/ssl/nginx.crt \
 	-subj "/CN=${HOSTNAME}"
-
-конфиг nginx с ssl
+```
+конфиг nginx с ssl \
 <img width="522" height="350" alt="image" src="https://github.com/user-attachments/assets/3548235f-7e2e-4b7f-be13-e7b3b8d1f99b" />
 
 
-curl -D- -k https://127.0.0.1/
+curl -D- -k https://127.0.0.1/ \
 
-если надо что-то сделать с сертами
+если надо что-то сделать с сертами \
+```
 cp /etc/nginx/ssl/nginx.crt /usr/local/share/ca-certificates
 update-ca-certificates
-
-и дальше curl можно обращаться уже по хостнейму
+```
+и дальше curl можно обращаться уже по хостнейму \
 
 ### OpenVPN
 <img width="578" height="253" alt="image" src="https://github.com/user-attachments/assets/6e971124-8872-490b-bc52-1ebfd9c936cc" />
@@ -111,5 +113,5 @@ echo "Создание завершено."
 <img width="881" height="228" alt="image" src="https://github.com/user-attachments/assets/a2c6074c-e619-4b05-a7b9-20947815a993" />
 
 ### Бэкапы
-https://github.com/rda0/ldif-git-backup?ysclid=ml702ojsg5234308302
+https://github.com/rda0/ldif-git-backup?ysclid=ml702ojsg5234308302 \
 https://pro-ldap.ru/tr/zytrax/ch8/
