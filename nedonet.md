@@ -1,5 +1,5 @@
 ### Настройка VPN (Wireguard и OpenVPN)
-Сначала net.ipv4.ip_forward = 1 \n
+Сначала net.ipv4.ip_forward = 1 \
 На хостах: apt install curl openssl
 На роутере: apt-get install -y iptables iproute2 net-tools nginx wireguard openssl
 
