@@ -18,3 +18,5 @@ https://0xdf.gitlab.io/2026/01/10/htb-previous.html
 https://0xdf.gitlab.io/2026/01/17/htb-hacknet.html
 
 https://0xdf.gitlab.io/2026/01/24/htb-imagery.html
+
+https://orange-cyberdefense.github.io/ocd-mindmaps/img/mindmap_ad_dark_classic_2025.03.excalidraw.svg
