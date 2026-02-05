@@ -9,5 +9,12 @@ https://github.com/The-Z-Labs/linux-exploit-suggester?spm=a2ty_o01.29997173.0.0.
 https://mitre.ptsecurity.com/ru-RU
 
 
-fswatch
-stat
+https://0xdf.gitlab.io/2026/01/26/htb-job.html
+
+https://0xdf.gitlab.io/2026/01/27/htb-jobtwo.html
+
+https://0xdf.gitlab.io/2026/01/10/htb-previous.html
+
+https://0xdf.gitlab.io/2026/01/17/htb-hacknet.html
+
+https://0xdf.gitlab.io/2026/01/24/htb-imagery.html
