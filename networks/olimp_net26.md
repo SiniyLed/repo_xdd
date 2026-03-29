@@ -139,20 +139,26 @@ AllowedIPs = 10.5.5.0/24, 224.0.0.0/24
 
 
 ## В конце:
+```
 wg-quick up wg0
 wg-quick up wg1
+```
 
 ### **И ОБЯЗАТЕЛЬНО ВЕЗДЕЕ!!!!!**
+```
 systemctl enable wg-quick@wg1
 systemctl enable wg-quick@wg0
+```
 
 -----------------------------------------------------------------
 ## OSPF
+```
 apt install frr
 nano /etc/frr/daemos             ->                     ospfd=yes
 systemctl restart frr
 systemctl enable --now frr
 vtysh
+```
 
 **На DC-RTR-1**
 ```
@@ -279,10 +285,12 @@ ip ospf authentication-key DEMO
 ## Уязвимость веб-сервиса
 Суть ошибки: на директорию `/var/spool/mail` (которая является ссылкой на `/var/mail`) установлены высокие мандатные метки: **Уровень_3:Низкий**, а также дополнительные категории и флаги.
 В Astra Linux 1.8 это означает, что **почтовый сервис или пользователь с нулевым уровнем доступа (обычный вход) не может прочитать содержимое**, так как его уровень допуска ниже, чем у папки с письмами. Именно поэтому сообщения становятся «нечитаемыми».
-![[Pasted image 20260327200436.png]]
+<img width="1272" height="153" alt="image" src="https://github.com/user-attachments/assets/47a51bcf-244e-4d60-8eb1-9dd17062c302" />
+
 
 Исправление:
-![[Pasted image 20260327200732.png]]
+<img width="950" height="251" alt="image" src="https://github.com/user-attachments/assets/e9f414f0-55d2-499e-86a4-5af03ce5194e" />
+
 ```
 sudo pdpl-file 0:0:0:ccnr /var/mail
 ```
@@ -416,14 +424,16 @@ cryptsetup status cryptlvm2
 cryptsetup status cryptlvm3
 ```
 
-![[Pasted image 20260327215055.png]]
+<img width="915" height="338" alt="image" src="https://github.com/user-attachments/assets/bfd113a4-ba57-4138-9ce5-4260b71eea0b" />
+
 
 
 --------------------------------------------------------------------------
 ## PAT на пограничных роутерах (внимательно на полученные интерфейсы)
 
 **На MSK-RTR**
-![[Pasted image 20260327220100.png]]
+<img width="731" height="605" alt="image" src="https://github.com/user-attachments/assets/7c97b8c2-2e13-4656-8431-d98184eef412" />
+
 
 --------------------------------------------------------------------------
 ##  DC-RTR-1 и DC-RTR-2 Suricata в режиме IDS
