@@ -432,6 +432,7 @@ cryptsetup status cryptlvm3
 ## PAT на пограничных роутерах (внимательно на полученные интерфейсы)
 
 **На MSK-RTR**
+\
 <img width="731" height="605" alt="image" src="https://github.com/user-attachments/assets/7c97b8c2-2e13-4656-8431-d98184eef412" />
 
 
