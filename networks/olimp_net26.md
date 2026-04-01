@@ -446,12 +446,106 @@ cryptsetup status cryptlvm3
 --------------------------------------------------------------------------
 ##  DC-RTR-1 и DC-RTR-2 Suricata в режиме IDS
 
+1. Установка
+```
+apt update && apt install suricata -y
+```
+2. Интерфейсы
+```
+Узнайте имя интерфейса, смотрящего на провайдера (ISP), через `ip a`. Допустим, это `eth0`. Отредактируйте `/etc/suricata/suricata.yaml`:
 
+- Найдите секцию `af-packet:` и в поле `interface:` укажите `eth0`.
+- Убедитесь, что в секции `outputs:` включен `eve-log` с типом `filetype: regular` (формат JSON по умолчанию).
+```
+```
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert
+        - http
+        - dns
+        - tls
+```
 
+3. Создание правил обнаружения
+Создайте файл `/etc/suricata/rules/local.rules` и добавьте правила:
+```
+# Детект сканирования (более 15 попыток соединения за 10 сек)
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"SCAN Portscan Detected"; flags:S; threshold: type both, track by_src, count 15, seconds 10; sid:1000001; rev:1;)
 
+# Детект брутфорса SSH (5 попыток за 60 сек)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 22 (msg:"ATTACK SSH Brute-force"; flow:to_server; flags:S,12; threshold: type both, track by_src, count 5, seconds 60; sid:1000002; rev:1;)
+```
 
+Включите файл в конфиг `suricata.yaml` (секция `rule-files`) и перезапустите службу: `systemctl restart suricata`.
 
+#### Настройка агентов Wazuh (DC-RTR и устройства ЕКБ)
+1. Установка
+```
+apt update && WAZUH_MANAGER=192.168.2.200 apt install wazuh-agent -y
+```
+**На DC-RTR-1 и DC-RTR-2 (дополнительно):**  
 
+Чтобы агент забирал логи Suricata, в `/var/ossec/etc/ossec.conf` добавьте:
+
+```
+<localfile>
+  <log_format>json</log_format>
+  <location>/var/log/suricata/eve.json</location>
+</localfile>
+```
+
+`systemctl restart wazuh-agent`
+
+#### Настройка сервера YEKT-WORKER (Wazuh Manager)
+
+Все настройки делаются в `/var/ossec/etc/rules/local_rules.xml`.
+
+1. Группировка роутеров:  
+Сначала объедините логи Suricata с роутеров.
+```
+<group name="suricata,routers,">
+  <rule id="100001" level="3">
+    <decoded_as>json</decoded_as>
+    <location>/var/log/suricata/eve.json</location>
+    <description>Suricata events collection</description>
+  </rule>
+</group>
+```
+2. Правило корреляции: Брутфорс SSH (5 входов за 5 минут):
+
+Wazuh уже видит неудачные входы (ID 5710). Создадим правило, которое "выстрелит" только при частом повторении:
+```
+<rule id="100002" level="10" frequency="5" timeframe="300">
+  <if_matched_sid>5710</if_matched_sid>
+  <same_source_ip />
+  <description>Multiple SSH authentication failures (5 in 5 min) from same IP.</description>
+</rule>
+```
+
+3. Мониторинг конфигов (FIM):
+
+Чтобы Wazuh следил за файлами, на сервере (в секции `<syscheck>` конфига `ossec.conf`) или через группы агентов добавьте:
+
+```
+<syscheck>
+  <directories check_all="yes" report_changes="yes" realtime="yes">/etc/passwd,/etc/shadow</directories>
+  <directories check_all="yes" report_changes="yes" realtime="yes">/etc/ssh/sshd_config</directories>
+  <directories check_all="yes" report_changes="yes" realtime="yes">/etc/ssh/sshd_config.d/*.conf</directories>
+</syscheck>
+```
+
+#### Привязка к группе routers
+
+Чтобы роутеры считались группой `routers`, выполните на сервере:
+
+1. Создайте группу: `/var/ossec/bin/agent_groups -a -g routers`
+2. Добавьте в неё агентов: `/var/ossec/bin/agent_groups -a -i [ID_АГЕНТА] -g routers` (ID можно узнать через `agent_control -l`).
+
+**Проверить поступление логов** можно в веб-интерфейсе Wazuh во вкладке **Security Events**, отфильтровав по `rule.groups: suricata`.
 
 
 --------------------------------------------------------------------------
