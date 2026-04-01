@@ -2,15 +2,17 @@
 ### **!! ВАЖНО** для каждого конфига свой privatekey **!!**
 
 **На DC-RTR-1**
+```
 wg genkey | tee /etc/wireguard/privatekey_1dc7 | wg pubkey > /etc/wireguard/publickey_1dc7
 wg genkey | tee /etc/wireguard/privatekey_1dc6 | wg pubkey > /etc/wireguard/publickey_1dc6
 scp /etc/wireguard/publickey_1dc6 user@88.8.8.27:/home/user
 scp /etc/wireguard/publickey_1dc7 user@188.121.90.2:/home/user
+```
 
 **wg0.conf**
 ```
 [Interface]
-Address = 10.7.7.1/30
+Address = 10.7.7.1/24
 PrivateKey = 
 ListenPort = 51820
 PostUP = ifmetric %i 10
@@ -23,28 +25,30 @@ AllowedIPs = 10.7.7.0/24, 224.0.0.0/24
 **wg1.conf**
 ```
 [Interface]
-Address = 10.5.5.1/30
+Address = 10.6.6.1/24
 PrivateKey = 
 ListenPort = 31820
 PostUP = ifmetric %i 20
 
 [Peer]
 PublicKey = 
-AllowedIPs = 10.5.5.0/24, 224.0.0.0/24
+AllowedIPs = 10.6.6.0/24, 224.0.0.0/24
 ```
 
 
 
 **На MSK-RTR**
+```
 wg genkey | tee /etc/wireguard/privatekey_msk7 | wg pubkey > /etc/wireguard/publickey_msk7
 wg genkey | tee /etc/wireguard/privatekey_msk5 | wg pubkey > /etc/wireguard/publickey_msk5
 scp /etc/wireguard/publickey_msk7 user@200.100.100.20:/home/user
 scp /etc/wireguard/publickey_msk5 user@100.200.100.20:/home/user
+```
 
 **wg0.conf**
 ```
 [Interface]
-Address = 10.7.7.2/30
+Address = 10.7.7.2/24
 PrivateKey = 
 ListenPort = 51820
 PostUP = ifmetric %i 10
@@ -58,7 +62,7 @@ AllowedIPs = 10.7.7.0/24, 224.0.0.0/24
 **wg1.conf**
 ```
 [Interface]
-Address = 10.5.5.2/30
+Address = 10.5.5.2/24
 PrivateKey = 
 ListenPort = 31820
 PostUP = ifmetric %i 20
@@ -71,15 +75,17 @@ AllowedIPs = 10.5.5.0/24, 224.0.0.0/24
 
 
 **На DC-RTR-2**
+```
 wg genkey | tee /etc/wireguard/privatekey_2dc8 | wg pubkey > /etc/wireguard/publickey_2dc8
 wg genkey | tee /etc/wireguard/privatekey_2dc5 | wg pubkey > /etc/wireguard/publickey_2dc5
 scp /etc/wireguard/publickey_2dc8 user@88.8.8.27:/home/user
 scp /etc/wireguard/publickey_2dc5 user@188.121.90.2:/home/user
+```
 
 **wg1.conf**
 ```
 [Interface]
-Address = 10.5.5.1/30
+Address = 10.5.5.1/24
 PrivateKey = 
 ListenPort = 31820
 PostUP = ifmetric %i 20
@@ -92,7 +98,7 @@ AllowedIPs = 10.5.5.0/24, 224.0.0.0/24
 **wg0.conf**
 ```
 [Interface]
-Address = 10.8.8.1/30
+Address = 10.8.8.1/24
 PrivateKey = 
 ListenPort = 51820
 PostUP = ifmetric %i 10
@@ -104,15 +110,17 @@ AllowedIPs = 10.8.8.0/24, 224.0.0.0/24
 
 
 **На EKT-RTR**
+```
 wg genkey | tee /etc/wireguard/privatekey_ekt8 | wg pubkey > /etc/wireguard/publickey_ekt8
 wg genkey | tee /etc/wireguard/privatekey_ekt6 | wg pubkey > /etc/wireguard/publickey_ekt6
-scp /etc/wireguard/publickey_msk6 user@200.100.100.20:/home/user
-scp /etc/wireguard/publickey_msk8 user@100.200.100.20:/home/user
+scp /etc/wireguard/publickey_ekt6 user@200.100.100.20:/home/user
+scp /etc/wireguard/publickey_ekt8 user@100.200.100.20:/home/user
+```
 
 **wg0.conf**
 ```
 [Interface]
-Address = 10.8.8.2/30
+Address = 10.8.8.2/24
 PrivateKey = 
 ListenPort = 51820
 PostUP = ifmetric %i 10
@@ -126,7 +134,7 @@ AllowedIPs = 10.8.8.0/24, 224.0.0.0/24
 **wg1.conf**
 ```
 [Interface]
-Address = 10.6.6.2/30
+Address = 10.6.6.2/24
 PrivateKey = 
 ListenPort = 31820
 PostUP = ifmetric %i 20
@@ -134,9 +142,8 @@ PostUP = ifmetric %i 20
 [Peer]
 PublicKey = 
 Endpoint = 200.100.100.20:31820
-AllowedIPs = 10.5.5.0/24, 224.0.0.0/24
+AllowedIPs = 10.6.6.0/24, 224.0.0.0/24
 ```
-
 
 ## В конце:
 ```
