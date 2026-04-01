@@ -457,26 +457,151 @@ cryptsetup status cryptlvm3
 --------------------------------------------------------------------------
 ## Политики безопасности REMOTE-TERMINAL
 
+1. Ограничение интерпретаторов
+```
+chmod 700 /usr/bin/python* /usr/bin/perl /usr/bin/php* /usr/bin/ruby* 
+```
 
+2. Скрипт отправки логов через rsync
+Установка sshpass
+```
+apt install sshpass
+```
+Создаем скрипт `/usr/local/bin/send_logs.sh`
+```
+#!/bin/bash
+TIMESTAMP=$(date +%H%M)
+LOG_NAME="auth.log-$TIMESTAMP"
 
+export RSYNC_PASSWORD='RsynC_PA$$'
+rsync -avz /var/log/auth.log rsync_user@88.8.8.27::www_effort_cool/$LOG_NAME
 
-
+```
+3. Настройка планировщика (Cron)
+```
+echo "0 * * * * root /usr/local/bin/send_logs.sh" | tee -a /etc/crontab
+systemctl restart cron
+```
+4. Настройка стороны приемника (YEKT-RTR)
+На стороне сервера в файле `/etc/rsyncd.conf` должен быть описан модуль:
+```
+[www_effort_cool]
+    path = /var/www/effort.cool/logs/
+    read only = no
+    auth users = rsync_user
+    secrets file = /etc/rsyncd.secrets
+```
+В файл `/etc/rsyncd.secrets` пишем `rsync_user:RsynC_PA$$`
+Установка владельца 
+```
+chown root:root /etc/rsyncd.secrets
+```
+Установка прав 600
+```
+chmod 600 /etc/rsyncd.secrets
+```
 
 -----
 ## DHCP-сервер на машине MSK-RTR
 
+1. Установка
+```
+apt update && apt install isc-dhcp-server -y
+```
+2. Отредактировать файл `/etc/default/isc-dhcp-server`, чтобы указать интерфейс, на котором будет работать сервер (например, `eth1` или `enp0s8` — уточнить через `ip a`):
+```
+INTERFACESv4="ваш_интерфейс"
+```
+3. Конфигурация пула
+Отредактируйте основной файл конфигурации `/etc/dhcp/dhcpd.conf`. Приведите его к следующему виду (лишнее можно закомментировать):
+```
+# Опции домена и DNS
+option domain-name "effort.cool";
+option domain-name-servers 192.168.1.2, 77.88.8.1;
 
+default-lease-time 600;
+max-lease-time 7200;
 
-
-----
-## 
-
-
-
+# Описание подсети
+subnet 192.168.1.0 netmask 255.255.255.0 {
+  range 192.168.1.50 192.168.1.100;
+  option routers 192.168.1.1; # Укажите IP этого роутера (MSK-RTR)
+  option subnet-mask 255.255.255.0;
+  option broadcast-address 192.168.1.255;
+}
+```
+4. Перезапуск и автозапуск
+```
+systemctl restart isc-dhcp-server
+systemctl enable isc-dhcp-server
+```
+### На клиенте
+Через `nano /etc/network/interfaces` пишем конфиг
+```
+    auto eth0
+    allow-hotplug eth0
+    iface eth0 inet dhcp
+```
 
 
 --------------------------------------------------------------------------
 ## SSH
+
+1. Создание пользователя
+```
+useradd -m -s /bin/bash cod_admin
+echo "cod_admin ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/cod_admin
+chmod 0440 /etc/sudoers.d/cod_admin
+```
+2. Файл `/etc/ssh/sshd_config.d/atom.conf`
+```
+# Заменить IP_LOCAL на конкретный адрес машины в этих сетях
+# ListenAddress 10.x.x.x
+# ListenAddress 192.168.x.x
+
+Port 22
+PermitRootLogin no
+MaxStartups 3
+ClientAliveInterval 300
+ClientAliveCountMax 0
+
+# Авторизация только по ключам
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile /ssh_keys/cod_admin.pub
+```
+
+#### На DC-STORAGE
+Установка NFS
+```
+apt install nfs-kernel-server -y
+```
+Папка с публичным ключом
+```
+mkdir -p /ssh_keys
+# Скопируйте сюда ваш id_rsa.pub и назовите его cod_admin.pub
+chmod 755 /ssh_keys
+chmod 644 /ssh_keys/cod_admin.pub
+```
+Разрешаем доступ
+```
+# Разрешаем сетям 10.0.0.0/8 и 192.168.0.0/16 чтение (ro)
+/ssh_keys 10.0.0.0/8(ro,sync,no_subtree_check) 192.168.0.0/16(ro,sync,no_subtree_check)
+```
+Применяем настройки `exportfs -ra`
+
+#### На целевых машинах
+Установка клиента `apt install nfs-common -y`
+
+Создание пустой папки-точки монтирования: `mkdir /ssh_keys`
+
+Добавление записи в `/etc/fstab`, чтобы папка подключалась автоматически при загрузке:
+```
+10.15.10.150:/ssh_keys /ssh_keys nfs ro,soft,intr 0 0
+```
+Примонтирвать прямо сейчас: `mount -a`
+
+
 
 
 
